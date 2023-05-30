@@ -6,6 +6,14 @@ flagged/
 ldm/
 models/
 
+# outputs folder
+outputs/cut cache/*
+outputs/equalize cache/*
+outputs/preview/*
+outputs/sd cache/*
+outputs/seikatus/*
+history/*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
