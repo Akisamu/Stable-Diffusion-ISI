@@ -10,6 +10,7 @@ About: This project is my graduation design for my university.
 
 2. 多批量预览图
 
+<img src="./test/exp.png">
 
 
 #### Thanks:
