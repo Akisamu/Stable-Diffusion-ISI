@@ -1,0 +1,13 @@
+{
+    "stable diffusion 参数": {
+        "模型名称": "pastelmix.ckpt",
+        "seed": 42,
+        "批量": 1,
+        "提示词相关性": 6,
+        "步数": 100,
+        "重绘幅度": 0.75,
+        "正相关提示词": "((masterpiece)), (((best quality))), ((ultra-detailed)), ((illustration)), white hair, blue eyes, elf, pantyhose, earrings, cape, ((knight)), sitting, (ruins), forest, wind, 1girl",
+        "反相关提示词": "watermark, longbody, lowres, bad anatomy, bad hands, missing fingers, pubic hair,extra digit, fewer digits, cropped, worst quality, low quality"
+    },
+    "放大倍率": "X4"
+}
