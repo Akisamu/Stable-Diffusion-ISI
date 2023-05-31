@@ -83,18 +83,6 @@ class StableDiffusion:
         self.model = self.model.to(self.device)
         # 创建ddim 采样器
         self.sampler = DDIMSampler(self.model)
-        """ 以下为可变参数 """
-        self.batch_size = 1
-        # CFG 缩放
-        self.scale = 7
-        # 采样步数
-        self.ddim_steps = 100
-        # 去除噪声强度
-        self.strength = 0.5
-        # 提示词
-        self.p_prompt = [""]
-        self.n_prompt = [""]
-        self.data = [""]
 
     # 输入图片大小缩放
     @classmethod
@@ -203,8 +191,8 @@ class StableDiffusion:
     def flash_data_isi(self, glo: list, loc: list) -> str:
         return ''.join(glo) + ',' + ''.join(loc)
 
-    def flash_data_sd(self) -> None:
-        self.data = self.batch_size * [self.p_prompt]
+    # def flash_data_sd(self) -> None:
+    #     self.data = self.batch_size * [self.p_prompt]
 
     # 更换模型权重
     def sd_change_model(self, folder: str, file: str) -> None:
@@ -223,13 +211,8 @@ class StableDiffusion:
                        n_p="",
                        ) -> list:
         # 设置必要参数
-        self.batch_size = batch_size
-        self.scale = scale
-        self.ddim_steps = ddim_steps
-        self.p_prompt = p_p
-        self.n_prompt = n_p
-        self.flash_data_sd()
-        re = []
+        data = batch_size * [p_p]
+        re_image = []
 
         # 设置随机数种子
         seed_everything(seed)
@@ -240,12 +223,12 @@ class StableDiffusion:
             with precision_scope("cuda"):
                 with self.model.ema_scope():
                     for n in trange(self.n_iter, desc="Sampling"):
-                        for prompts in tqdm(self.data, desc="data", colour="green"):
+                        for prompts in tqdm(data, desc="data", colour="green"):
                             print(f'This step: {prompts}')
                             uc = None
                             # cfg scale
                             if scale != 1.0:
-                                uc = self.model.get_learned_conditioning(self.batch_size * self.n_prompt)
+                                uc = self.model.get_learned_conditioning(batch_size * n_p)
                             # 元组 转 列表
                             if isinstance(prompts, tuple):
                                 prompts = list(prompts)
@@ -256,7 +239,7 @@ class StableDiffusion:
                             # 采样数据 shape (4, 512/8, 512/8) => (4, 64, 64)
                             shape = [self.C, self.H // self.f, self.W // self.f]
                             # 采样
-                            samples_ddim, _ = self.sampler.sample(S=self.ddim_steps,
+                            samples_ddim, _ = self.sampler.sample(S=ddim_steps,
                                                              conditioning=c,
                                                              batch_size=self.n_samples,
                                                              shape=shape,
@@ -277,8 +260,8 @@ class StableDiffusion:
                             x_sample = 255. * x_samples_ddim
 
                             img1 = np.stack([x_sample[0][0, :, :], x_sample[0][1, :, :], x_sample[0][2, :, :]], axis=2)
-                            re.append(Image.fromarray(img1.astype(np.uint8)))
-                    return re
+                            re_image.append(Image.fromarray(img1.astype(np.uint8)))
+                    return re_image
 
     # sd 的 i2i 流程
     def sd_i2i_process(self,
@@ -297,30 +280,21 @@ class StableDiffusion:
         re_image = []
 
         # 参数设置
-        self.batch_size = batch_size
-        self.scale = scale
-        self.ddim_steps = ddim_steps
-        self.strength = strength
-
-        # 提示词
-        self.p_prompt = p_p
-        self.n_prompt = n_p
-        self.data = [batch_size * [p_p]]
-        print(f'data === {self.data}')
+        data = [batch_size * [p_p]]
 
         # 加载 像素空间 图片
         init_image = load_img(img).to(self.device)
-        init_image = repeat(init_image, '1 ... -> b ...', b=self.batch_size)
+        init_image = repeat(init_image, '1 ... -> b ...', b=batch_size)
 
         # 像素空间 转换到 潜在空间
         init_latent = self.model.get_first_stage_encoding(self.model.encode_first_stage(init_image))  # move to latent space
 
         # 初始化采样器
-        self.sampler.make_schedule(ddim_num_steps=self.ddim_steps, ddim_eta=self.ddim_eta, verbose=False)
+        self.sampler.make_schedule(ddim_num_steps=ddim_steps, ddim_eta=self.ddim_eta, verbose=False)
 
         # 取噪强度 * 采样步数
-        assert 0. <= self.strength <= 1., 'can only work with strength in [0.0, 1.0]'
-        t_enc = int(self.strength * self.ddim_steps)
+        assert 0. <= strength <= 1., 'can only work with strength in [0.0, 1.0]'
+        t_enc = int(strength * ddim_steps)
         print(f"target t_enc is {t_enc} steps")
 
         precision_scope = autocast
@@ -328,19 +302,19 @@ class StableDiffusion:
             with precision_scope("cuda"):
                 with self.model.ema_scope():
                     for n in trange(self.n_iter, desc="Sampling"):
-                        for prompts in tqdm(self.data, desc="data", colour="green"):
+                        for prompts in tqdm(data, desc="data", colour="green"):
                             uc = None
                             if scale != 1.0:
-                                uc = self.model.get_learned_conditioning(self.batch_size * [self.n_prompt])
+                                uc = self.model.get_learned_conditioning(batch_size * [n_p])
                             if isinstance(prompts, tuple):
                                 prompts = list(prompts)
                             c = self.model.get_learned_conditioning(prompts)
 
                             # encode (scaled latent) Aplha混合 潜在空间图像 和 噪声
                             z_enc = self.sampler.stochastic_encode(init_latent,
-                                                              torch.tensor([t_enc] * self.batch_size).to(self.device))
+                                                              torch.tensor([t_enc] * batch_size).to(self.device))
                             # decode it 采样器采样
-                            samples = self.sampler.decode(z_enc, c, t_enc, unconditional_guidance_scale=self.scale,
+                            samples = self.sampler.decode(z_enc, c, t_enc, unconditional_guidance_scale=scale,
                                                      unconditional_conditioning=uc, )
 
                             # VAE 解码器 将潜在空间转化为像素空间
@@ -368,27 +342,21 @@ class StableDiffusion:
                         p_p="",
                         n_p="") -> list:
         # 设置必要参数
-        self.batch_size = 1
-        self.scale = scale
-        self.ddim_steps = ddim_steps
-        self.strength = strength
-        self.p_prompt = p_p
-        self.n_prompt = n_p
 
         global_prompt = []
         local_prompt = []
         re_image = []
 
-        if '}' in self.p_prompt:
+        if '}' in p_p:
             global_prompt.append(
-                self.p_prompt.replace('{', '').split('}')[0]
+                p_p.replace('{', '').split('}')[0]
             )
             local_prompt = StableDiffusion.sec_to_list(
-                self.p_prompt.replace('{', '').split('}')[1]
+                p_p.replace('{', '').split('}')[1]
             )
         else:
             local_prompt = StableDiffusion.sec_to_list(
-                self.p_prompt
+                p_p
             )
 
         # 设置随机数种子
@@ -400,11 +368,11 @@ class StableDiffusion:
         init_latent = self.model.get_first_stage_encoding(self.model.encode_first_stage(init_image))  # move to latent space
 
         # 初始化采样器
-        self.sampler.make_schedule(ddim_num_steps=self.ddim_steps, ddim_eta=self.ddim_eta, verbose=False)
+        self.sampler.make_schedule(ddim_num_steps=ddim_steps, ddim_eta=self.ddim_eta, verbose=False)
 
         # 取噪强度 * 采样步数
-        assert 0. <= self.strength <= 1., 'can only work with strength in [0.0, 1.0]'
-        t_enc = int(self.strength * self.ddim_steps)
+        assert 0. <= strength <= 1., 'can only work with strength in [0.0, 1.0]'
+        t_enc = int(strength * ddim_steps)
         print(f"target t_enc is {t_enc} steps")
 
         precision_scope = autocast
@@ -416,19 +384,19 @@ class StableDiffusion:
                             prompts = self.flash_data_isi(global_prompt, prompts)
                             p, w = [StableDiffusion.get_prompt_and_weight(prompts)['prompt'],
                                     StableDiffusion.get_prompt_and_weight(prompts)['weight']]
-                            print(f'prompt = {p}, weight = {self.scale*w}')
+                            print(f'prompt = {p}, weight = {scale*w}')
                             uc = None
-                            if self.scale != 1.0:
-                                uc = self.model.get_learned_conditioning(self.batch_size * self.n_prompt)
+                            if scale != 1.0:
+                                uc = self.model.get_learned_conditioning(n_p)
                             if isinstance(p, tuple):
                                 prompts = list(p)
                             c = self.model.get_learned_conditioning(prompts)
 
                             # encode (scaled latent) Aplha混合 潜在空间图像 和 噪声
                             z_enc = self.sampler.stochastic_encode(init_latent,
-                                                              torch.tensor([t_enc] * self.batch_size).to(self.device))
+                                                              torch.tensor([t_enc]).to(self.device))
                             # decode it 采样器采样
-                            samples = self.sampler.decode(z_enc, c, t_enc, unconditional_guidance_scale=self.scale*w,
+                            samples = self.sampler.decode(z_enc, c, t_enc, unconditional_guidance_scale=scale*w,
                                                      unconditional_conditioning=uc, )
 
                             # VAE 解码器 将潜在空间转化为像素空间
