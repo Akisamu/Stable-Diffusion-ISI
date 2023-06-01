@@ -19,9 +19,6 @@ from stable_diffusion.ldm.util import instantiate_from_config
 from stable_diffusion.ldm.models.diffusion.ddim import DDIMSampler
 
 
-HOME_DIR = '.'
-
-
 # stable diffusion 加载流程的
 def load_model_from_config(config, ckpt, verbose=False):
     print(f"Loading model from {ckpt}")
