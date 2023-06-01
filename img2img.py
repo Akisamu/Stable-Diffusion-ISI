@@ -187,8 +187,8 @@ class StableDiffusion:
                 i = i + 1
 
     # 刷新 data 数据
-    def flash_data_isi(self, glo: list, loc: list) -> str:
-        return ''.join(glo) + ',' + ''.join(loc)
+    def flash_data_isi(self, glo: str, loc: str) -> str:
+        return glo + ','.join(loc)
 
     # def flash_data_sd(self) -> None:
     #     self.data = self.batch_size * [self.p_prompt]
@@ -342,14 +342,12 @@ class StableDiffusion:
                         n_p="") -> list:
         # 设置必要参数
 
-        global_prompt = []
+        global_prompt = ''
         local_prompt = []
         re_image = []
 
         if '}' in p_p:
-            global_prompt.append(
-                p_p.replace('{', '').split('}')[0]
-            )
+            global_prompt = p_p.replace('{', '').split('}')[0]
             local_prompt = StableDiffusion.sec_to_list(
                 p_p.replace('{', '').split('}')[1]
             )
@@ -380,15 +378,15 @@ class StableDiffusion:
                 with self.model.ema_scope():
                     for n in trange(self.n_iter, desc="Sampling"):
                         for prompts in tqdm(local_prompt, desc="data", colour="green"):
-                            prompts = self.flash_data_isi(global_prompt, prompts)
                             p, w = [StableDiffusion.get_prompt_and_weight(prompts)['prompt'],
                                     StableDiffusion.get_prompt_and_weight(prompts)['weight']]
+                            prompts = self.flash_data_isi(global_prompt, p)
                             print(f'prompt = {p}, weight = {scale*w}')
                             uc = None
                             if scale != 1.0:
                                 uc = self.model.get_learned_conditioning(n_p)
-                            if isinstance(p, tuple):
-                                prompts = list(p)
+                            if isinstance(prompts, tuple):
+                                prompts = list(prompts)
                             c = self.model.get_learned_conditioning(prompts)
 
                             # encode (scaled latent) Aplha混合 潜在空间图像 和 噪声
@@ -416,12 +414,3 @@ class StableDiffusion:
                             # 像素空间 转换到 潜在空间
                             init_latent = self.model.get_first_stage_encoding(self.model.encode_first_stage(init_image))
                     return re_image
-
-
-
-
-
-
-
-
-
