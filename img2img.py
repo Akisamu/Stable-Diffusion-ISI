@@ -1,12 +1,12 @@
 """make variations of input image"""
 import os
 import sys
-sys.path.append('.')
-sys.path.append('.\\stable_diffusion')
 import torch
 import numpy
 import math
 import PIL
+from utils import *
+import cv2 as cv
 from omegaconf import OmegaConf
 from PIL import Image, ImageDraw
 from tqdm import tqdm, trange
@@ -14,10 +14,10 @@ from itertools import islice
 from einops import repeat
 from torch import autocast
 from pytorch_lightning import seed_everything
+sys.path.append('.\\stable_diffusion')
 from stable_diffusion.ldm.util import instantiate_from_config
 from stable_diffusion.ldm.models.diffusion.ddim import DDIMSampler
-from utils import *
-import cv2 as cv
+
 
 HOME_DIR = '.'
 
