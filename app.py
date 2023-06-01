@@ -29,7 +29,8 @@ his = check_path(io_configs["history"])
 # 建立 Stable Diffusion 对象
 sd_instance = StableDiffusion(
     config_path=sd_config['model_config_path'],
-    model_path=f'{MODEL_DIR}\\{model_name}'
+    model_path=f'{MODEL_DIR}\\{model_name}',
+    is_init_model=sd_config["is_init_model"]
 )
 
 
@@ -246,8 +247,10 @@ def create_ui():
                 with gr.Row():
                     output_img = gr.Image(type='pil', label='输出图片')
                 with gr.Row():
+                    d_value = f'已加载模型：{sd_config["default_model"]}' if 'model.ckpt' in model_name_list else '无默认模型'
+
                     logs = gr.Textbox(label='模型状态',
-                                      value='已加载模型：model.ckpt' if 'model.ckpt' in model_name_list else '无默认模型',
+                                      value=d_value if sd_config["is_init_model"] else '不加载默认模型，请切换模型',
                                       interactive=False, lines=1)
                 with gr.Row():
                     with gr.Accordion(label='本次运行数据', open=False):

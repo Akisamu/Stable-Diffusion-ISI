@@ -15,7 +15,8 @@
   "stable_diffusion_config": {
     "model_folder": ".\\models\\stable diffusion",
     "default_model": "model.ckpt",
-    "model_config_path": "./stable_diffusion/configs/stable-diffusion/v1-inference.yaml"
+    "model_config_path": "./stable_diffusion/configs/stable-diffusion/v1-inference.yaml",
+    "is_init_model": true
   },
   "io_config": {
     "cut": ".\\outputs\\cut cache",

@@ -58,7 +58,7 @@ def load_img(image: Image):
 
 
 class StableDiffusion:
-    def __init__(self, config_path: str, model_path: str):
+    def __init__(self, config_path: str, model_path: str, is_init_model=True):
         """ 以下为不可变参数 """
         self.C = 4
         # 高
@@ -77,14 +77,14 @@ class StableDiffusion:
         self.start_code = None
         # 加载配置文件
         self.config = OmegaConf.load(config_path)
-        # 从加载的配置文件创建模型
-        self.model = load_model_from_config(self.config, model_path)
         # 设备
         self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+        # 从加载的配置文件创建模型
+        self.model = load_model_from_config(self.config, model_path) if is_init_model else None
         # 将模型送到CUDA设备 或者 CPU
-        self.model = self.model.to(self.device)
+        self.model = self.model.to(self.device) if is_init_model else None
         # 创建ddim 采样器
-        self.sampler = DDIMSampler(self.model)
+        self.sampler = DDIMSampler(self.model) if is_init_model else None
 
     # 输入图片大小缩放
     @classmethod
