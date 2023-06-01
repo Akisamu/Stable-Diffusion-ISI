@@ -12,18 +12,18 @@ sd_config = config['stable_diffusion_config']
 
 
 # 初始化加载模型名称列表
-MODEL_DIR = sd_config['model_folder']
+MODEL_DIR = check_path(sd_config['model_folder'])
 model_name_list = [item for item in get_filenames(MODEL_DIR) if item.endswith(".ckpt")]
 model_name = sd_config['default_model']
 
 # 获取sd流程的io路径
 io_configs = config["io_config"]
-cut = io_configs["cut"]
-sd = io_configs["sd"]
-equalize = io_configs["equalize"]
-pre = io_configs["pre"]
-fin = io_configs["fin"]
-his = io_configs["history"]
+cut = check_path(io_configs["cut"])
+sd = check_path(io_configs["sd"])
+equalize = check_path(io_configs["equalize"])
+pre = check_path(io_configs["pre"])
+fin = check_path(io_configs["fin"])
+his = check_path(io_configs["history"])
 
 
 # 建立 Stable Diffusion 对象

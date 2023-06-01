@@ -25,15 +25,6 @@ if (!(Test-Path -Path "venv")) {
 .\venv\Scripts\activate
 Check "venv install FAILURE"
 
-if(Test-Path -Path "stable-diffusion") {
-    Move-Item -Path ".\stable-diffusion\configs" -Destination ".\" -Recurse -Force
-    Move-Item -Path ".\stable-diffusion\data" -Destination ".\" -Recurse -Force
-    Move-Item -Path ".\stable-diffusion\ldm" -Destination ".\" -Recurse -Force
-    Move-Item -Path ".\stable-diffusion\models" -Destination ".\" -Force
-    Move-Item -Path ".\stable-diffusion\setup.py" -Destination ".\" -Force
-    Remove-Item -Path ".\stable-diffusion\" -Recurse -Force
-}
-
 Write-Output "Install dependences."
 pip3 install clean-fid numba numpy torch==2.0.0+cu118 torchvision --force-reinstall --extra-index-url https://download.pytorch.org/whl/cu118
 Check "Unable to  install PyTorch"

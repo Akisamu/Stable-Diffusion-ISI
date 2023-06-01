@@ -25,15 +25,6 @@ if (!(Test-Path -Path "venv")) {
 .\venv\Scripts\activate
 Check "激活虚拟环境失败。"
 
-if(Test-Path -Path "stable-diffusion") {
-    Move-Item -Path ".\stable-diffusion\configs" -Destination ".\" -Recurse -Force
-    Move-Item -Path ".\stable-diffusion\data" -Destination ".\" -Recurse -Force
-    Move-Item -Path ".\stable-diffusion\ldm" -Destination ".\" -Recurse -Force
-    Move-Item -Path ".\stable-diffusion\models" -Destination ".\" -Recurse -Force 
-    Move-Item -Path ".\stable-diffusion\setup.py" -Destination ".\" -Force
-    Remove-Item -Path ".\stable-diffusion\" -Recurse -Force
-}
-
 Write-Output "安装程序所需依赖 (已进行国内加速，若无法使用加速源请用 install.ps1)..."
 Set-Location .\sd-scripts
 pip install torch==2.0.0+cu118 torchvision==0.15.1+cu118 -f https://mirror.sjtu.edu.cn/pytorch-wheels/torch_stable.html -i https://mirrors.bfsu.edu.cn/pypi/web/simple

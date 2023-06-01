@@ -1,12 +1,8 @@
 # latent diffusion models
-configs/
-assets/
-data/
-flagged/
-ldm/
-models/
+models/stable diffusion/*
 
 # outputs folder
+train/*
 outputs/cut cache/*
 outputs/equalize cache/*
 outputs/preview/*

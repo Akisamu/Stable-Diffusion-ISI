@@ -8,14 +8,14 @@
     "max_batch_size": 16,
     "max_scale": 13,
     "default_p_prompt": "(masterpiece:1.2), (best quality), ultra-detailed, illustration, white hair, blue eyes, elf, pantyhose, earrings, cape, knight, sitting, ruins, forest, wind, 1girl",
-    "default_n_prompt": "watermark,longbody,lowres,bad anatomy,bad hands,missing fingers,pubic hair,extra digit,fewer digits,cropped,worst quality,low quality",
+    "default_n_prompt": "watermark,longbody,lowres,bad anatomy,bad hands,missing fingers,pubic hair,extra digit,fewer digits,cropped,worst quality,low quality,NSFW",
     "intro": " <p><h5>sd-t2i：</h5>&nbsp&nbsp&nbsp&nbsp当您未上传图片的时候，会进入 sd-t2i 模式。t2i模式下支持多批量，同时会将分词交给 CLIP。该模式下会使用传统的 sd t2i 流程。<br><h5>sd-i2i：</h5>&nbsp&nbsp&nbsp&nbsp当您上传图片后，会进入 i2i 模式。若使用传统的 sd prompt 语法，则会进入 sd-i2i 模式。该模式下会使用传统的 sd i2i 流程，并且支持多批量。<br><h5>ISI-i2i：</h5>&nbsp&nbsp&nbsp&nbsp在 i2i 模式下，若使用 ISI 语法，则会进入 ISI-i2i 模式。ISI模式下无法使用多批量，但可进行多次迭代。'{}'，';'等原本 sd process 不支持的字符为 ISI 语法的关键字。'{}' 中的 prompt 为全局 prompt，每次迭代都会加入该 prompt，其余的 prompt 为局部 prompt，由 ';' 进行分组，每次迭代都会加入一组局部 prompt。<br>&nbsp&nbsp&nbsp&nbsp sd process 的多批量是没有记忆能力的，但 ISI 的多此迭代中，每次迭代都会将上一次迭代的结果作为参数，使整个流程有记忆能力。在该能力的作用下，多次迭代可以在保留原图特征的同时有效的增强泛化能力。<br><code>示例：{global-prompt-group}local-prompt-group-1;((local-prompt-group-2));(local-prompt-group-3:1.21)</code></p>",
     "css": "#del-btn {\n    max-width: 2.5em;\n    min-width: 2.5em !important;\n    height: 2.5em;\n    margin: 1.5em 0;\n}"
   },
   "stable_diffusion_config": {
-    "model_folder": ".\\models\\ldm\\stable-diffusion-v1",
+    "model_folder": ".\\models\\stable diffusion",
     "default_model": "model.ckpt",
-    "model_config_path": "./configs/stable-diffusion/v1-inference.yaml"
+    "model_config_path": "./stable_diffusion/configs/stable-diffusion/v1-inference.yaml"
   },
   "io_config": {
     "cut": ".\\outputs\\cut cache",

@@ -149,3 +149,10 @@ def read_json(file: str) -> dict:
         return json.load(data)
 
 
+# 是否存在该路径，若不存在则创建
+def check_path(path: str) -> str:
+    if not os.path.exists(path):
+        os.makedirs(path)
+        print(f"{path} 已创建")
+    return path
+
