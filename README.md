@@ -50,6 +50,13 @@ https://github.com/luzhixing12345/image-super-resolution/
 
 在该模式下，提示词被分为 global prompt group 和 local prompt group。每次迭代都会加入 global prompt group出，并且按顺序使用一组 local prompt group。这样，可以在迭代过程中完全保持 global prompt group 特征的同时向 local prompt group 方向衍生，大大提高了其泛化能力。
 
+##### models example:
+\[stable diffusion v1.5]: https://huggingface.co/runwayml/stable-diffusion-v1-5
+
+\[pastel-mix]: https://huggingface.co/andite/pastel-mix
+
+\[anything v3.0]: https://civitai.com/models/66/anything-v3
+
 #### 遇到的问题：
 1. 不知道怎么加载 VAE 解码器权重，导致有些模型产出的图片发灰。目前使用均值化解决该问题。
 2. 只能加载及个别 sd 模型权重。
