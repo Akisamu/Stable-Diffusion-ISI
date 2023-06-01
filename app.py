@@ -29,7 +29,7 @@ his = check_path(io_configs["history"])
 # 建立 Stable Diffusion 对象
 sd_instance = StableDiffusion(
     config_path=sd_config['model_config_path'],
-    model_path=f'{MODEL_DIR}\\{model_name}',
+    model_path=os.path.join(MODEL_DIR, model_name),
     is_init_model=sd_config["is_init_model"]
 )
 
