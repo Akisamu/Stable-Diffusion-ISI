@@ -9,7 +9,7 @@ from utils import convert_rgb_to_ycbcr, convert_ycbcr_to_rgb, calc_psnr
 
 
 # 图像超分辨率
-def upscale(scale: int, img: pil_image):
+def upscale(scale: int, img: pil_image) -> pil_image:
     cudnn.benchmark = True
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 

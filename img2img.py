@@ -14,7 +14,7 @@ from itertools import islice
 from einops import repeat
 from torch import autocast
 from pytorch_lightning import seed_everything
-sys.path.append('.\\stable_diffusion')
+sys.path.append('stable_diffusion')
 from stable_diffusion.ldm.util import instantiate_from_config
 from stable_diffusion.ldm.models.diffusion.ddim import DDIMSampler
 
@@ -107,7 +107,7 @@ class StableDiffusion:
     # 返回模型路径
     @classmethod
     def get_model(cls, folder: str, file: str) -> str:
-        return f"{folder}\\{file}"
+        return os.path.join(folder, file)
 
     # 将句子划分为以prompt为单位的list
     @classmethod
@@ -222,7 +222,7 @@ class StableDiffusion:
             with precision_scope("cuda"):
                 with self.model.ema_scope():
                     for n in trange(self.n_iter, desc="Sampling"):
-                        for prompts in tqdm(data, desc="data", colour="green"):
+                        for prompts in tqdm(data, desc="data", colour="red"):
                             print(f'This step: {prompts}')
                             uc = None
                             # cfg scale
@@ -377,7 +377,7 @@ class StableDiffusion:
             with precision_scope("cuda"):
                 with self.model.ema_scope():
                     for n in trange(self.n_iter, desc="Sampling"):
-                        for prompts in tqdm(local_prompt, desc="data", colour="green"):
+                        for prompts in tqdm(local_prompt, desc="data", colour="blue"):
                             p, w = [StableDiffusion.get_prompt_and_weight(prompts)['prompt'],
                                     StableDiffusion.get_prompt_and_weight(prompts)['weight']]
                             prompts = self.flash_data_isi(global_prompt, p)
