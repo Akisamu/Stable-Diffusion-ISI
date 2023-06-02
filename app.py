@@ -128,7 +128,7 @@ def stable_diffusion_logic(img,
             i = 1
             for item in sd_image:
                 item = StableDiffusion.sd_equalize_hist(item)
-                item.save(Op.join(f'{equalize}\\{png_hash}', f'batch={i}.png'))
+                item.save(Op.join(f'{equalize}', f'{png_hash}', f'batch={i}.png'))
                 equalize_image_cache.append(item)
                 i = i + 1
             equalize_image = equalize_image_cache
@@ -152,13 +152,13 @@ def stable_diffusion_logic(img,
         if up == 1:
             create_dir(fin, f'{png_hash}')
             for item in upscale_image:
-                item.save(Op.join(f'{fin}\\{png_hash}', f'batch={i}.png'))
+                item.save(Op.join(f'{fin}', f'{png_hash}', f'batch={i}.png'))
                 i = i + 1
         else:
             create_dir(fin, f'[X{up}] {png_hash}')
             for item in upscale_image:
                 item = upscale(scale=up, img=item)
-                item.save(Op.join(f'{fin}\\[X{up}] {png_hash}', f'batch={i}.png'))
+                item.save(Op.join(f'{fin}', f'[X{up}] {png_hash}', f'batch={i}.png'))
                 upscale_image_cache.append(item)
                 i = i + 1
             upscale_image = upscale_image_cache
@@ -182,7 +182,7 @@ def stable_diffusion_logic(img,
         "是否使用均值化": '是' if eq else '否'
     }
     # 保存该次配置到 history 文件夹中
-    write_dict_to_json(f'{his}\\{png_hash}.json', log)
+    write_dict_to_json(Op.join(his, f'{png_hash}.json'), log)
     print("已将本次运行配置保存在 history 文件夹中")
     # 清除显存中缓存的张量
     torch.cuda.empty_cache()
