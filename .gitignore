@@ -1,5 +1,5 @@
 # latent diffusion models
-models/stable diffusion/*.ckpt
+models/stable diffusion/
 
 # outputs folder
 train/*
