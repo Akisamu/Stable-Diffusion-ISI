@@ -3,8 +3,6 @@ from img2img import StableDiffusion
 from image_super_resolution import upscale
 from PIL import Image
 from utils import *
-# 乐
-import os.path as Op
 
 # 加载webui的配置
 config = read_json('config.json')
