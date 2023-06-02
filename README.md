@@ -14,13 +14,13 @@ About: This project is my graduation design for my university.
 
 ## Thanks:
 
-* \[1]: Stabe-Diffusion:
+* Stable-Diffusion:
 https://github.com/CompVis/stable-diffusion
 
-* \[2]: img2img script:
+* img2img script:
 https://gitee.com/nightaway/automatic111-webui-exts
 
-* \[3]: upscale models and script:
+* upscale models and script:
 https://github.com/luzhixing12345/image-super-resolution/
 
 ## How to run this project?
