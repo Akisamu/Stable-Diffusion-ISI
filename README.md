@@ -72,5 +72,7 @@ https://github.com/luzhixing12345/image-super-resolution/
 2. 只能加载及个别 sd 模型权重。
 3. 优化稀烂。没有 12G 显存基本没法运行。
 
+<hr>
+
 
 
