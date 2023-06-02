@@ -14,7 +14,7 @@ About: This project is my graduation design for my university.
 
 ## Thanks:
 
-* Stable-Diffusion:
+* Stapyinstalle-Diffusion:
 https://github.com/CompVis/stable-diffusion
 
 * img2img script:

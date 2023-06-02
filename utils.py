@@ -115,11 +115,6 @@ def get_hash(length=10) -> str:
     return hash_object.hexdigest()
 
 
-# 返回 png 图片的完整路径
-def put_png_path(folder: str, name: str):
-    return folder + '\\' + name + '.png'
-
-
 # 获得当前时间，精确到秒
 def get_time() -> str:
     now = datetime.datetime.now()  # 获取当前时间
@@ -155,4 +150,3 @@ def check_path(path: str) -> str:
         os.makedirs(path)
         print(f"{path} 已创建")
     return path
-

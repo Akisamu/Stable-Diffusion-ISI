@@ -3,6 +3,8 @@ from img2img import StableDiffusion
 from image_super_resolution import upscale
 from PIL import Image
 from utils import *
+# 乐
+import os.path as Op
 
 # 加载webui的配置
 config = read_json('config.json')
@@ -36,9 +38,11 @@ sd_instance = StableDiffusion(
 
 # gradio 的 callback 函数：切换模型
 def change_model(model: str) -> str:
+    global model_name
+    if model == model_name:
+        return f'已经是 {model_name}'
     if model in model_name_list:
         sd_instance.sd_change_model(MODEL_DIR, model)
-        global model_name
         model_name = model
         return f'已重新加载model：{model}'
     return f'该模组不在 {MODEL_DIR} 目录下'
@@ -68,7 +72,7 @@ def stable_diffusion_logic(img,
     # 裁剪图片
     resize_image = StableDiffusion.input_image_resize(img) if img is not None else None
     if resize_image is not None:
-        resize_image.save(put_png_path(cut, png_hash))
+        resize_image.save(Op.join(cut, f"{png_hash}.png"))
 
     # 扩散模型处理图片
     sd_image = []
@@ -104,12 +108,12 @@ def stable_diffusion_logic(img,
             n_p=n_p,
         )
     if len(sd_image) == 1:
-        sd_image[0].save(put_png_path(sd, png_hash))
+        sd_image[0].save(Op.join(sd, f"{png_hash}.png"))
     else:
         create_dir(sd, png_hash)
         i = 1
         for item in sd_image:
-            item.save(put_png_path(f'{sd}\\{png_hash}', f'batch={i}'))
+            item.save(Op.join(sd, png_hash, f'batch={i}.png'))
             i = i + 1
 
     # 图像均值化
@@ -118,14 +122,13 @@ def stable_diffusion_logic(img,
     if eq:
         if len(equalize_image) == 1:
             equalize_image[0] = StableDiffusion.sd_equalize_hist(equalize_image[0])
-            equalize_image[0].save(put_png_path(equalize, png_hash))
+            equalize_image[0].save(Op.join(equalize, f"{png_hash}.png"))
         else:
             create_dir(equalize, png_hash)
             i = 1
             for item in sd_image:
                 item = StableDiffusion.sd_equalize_hist(item)
-                item.save(put_png_path(f'{equalize}\\{png_hash}',
-                                       f'batch={i}'))
+                item.save(Op.join(f'{equalize}\\{png_hash}', f'batch={i}.png'))
                 equalize_image_cache.append(item)
                 i = i + 1
             equalize_image = equalize_image_cache
@@ -138,24 +141,24 @@ def stable_diffusion_logic(img,
     if len(upscale_image) == 1:
         re_image = upscale_image[0]
         if up == 1:
-            upscale_image[0].save(put_png_path(fin, png_hash))
+            upscale_image[0].save(Op.join(fin, f"{png_hash}.png"))
         else:
             upscale_image[0] = upscale(scale=up, img=upscale_image[0])
-            upscale_image[0].save(put_png_path(fin, f'[X{up}] {png_hash}'))
+            upscale_image[0].save(Op.join(fin, f'[X{up}] {png_hash}.png'))
     else:
         re_image = StableDiffusion.get_preview(upscale_image)
-        re_image.save(put_png_path(pre, f'{png_hash}'))
+        re_image.save(Op.join(pre, f'{png_hash}.png'))
         i = 1
         if up == 1:
             create_dir(fin, f'{png_hash}')
             for item in upscale_image:
-                item.save(put_png_path(f'{fin}\\{png_hash}', f'batch={i}'))
+                item.save(Op.join(f'{fin}\\{png_hash}', f'batch={i}.png'))
                 i = i + 1
         else:
             create_dir(fin, f'[X{up}] {png_hash}')
             for item in upscale_image:
                 item = upscale(scale=up, img=item)
-                item.save(put_png_path(f'{fin}\\[X{up}] {png_hash}', f'batch={i}'))
+                item.save(Op.join(f'{fin}\\[X{up}] {png_hash}', f'batch={i}.png'))
                 upscale_image_cache.append(item)
                 i = i + 1
             upscale_image = upscale_image_cache
@@ -277,7 +280,6 @@ def create_ui():
                 output_img,
                 run_data
             ])
-
     return demo
 
 

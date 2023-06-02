@@ -19,7 +19,8 @@ from stable_diffusion.ldm.util import instantiate_from_config
 from stable_diffusion.ldm.models.diffusion.ddim import DDIMSampler
 
 
-# stable diffusion 加载流程的
+# stable diffusion 加载流程
+# https://github.com/CompVis/stable-diffusion/blob/main/scripts/img2img.py
 def load_model_from_config(config, ckpt, verbose=False):
     print(f"Loading model from {ckpt}")
     pl_sd = torch.load(ckpt, map_location="cpu")
@@ -146,7 +147,7 @@ class StableDiffusion:
             re['prompt'] = prompt.replace('(', '').replace(')', '')
             re['weight'] = math.pow(1.1, left) if left == right else 1
         print(f'ENCODING: prompt = {re["prompt"]} and weight = {re["weight"]}')
-        re['prompt'] = re['prompt'].replace('\n', '')
+        re['prompt'] = re["prompt"].replace('\n', '')
         if re['prompt'][0] == ',':
             re['prompt'] = re['prompt'][1::]
         return re
@@ -188,7 +189,7 @@ class StableDiffusion:
 
     # 刷新 data 数据
     def flash_data_isi(self, glo: str, loc: str) -> str:
-        return glo + ','.join(loc)
+        return glo + loc
 
     # def flash_data_sd(self) -> None:
     #     self.data = self.batch_size * [self.p_prompt]
@@ -381,7 +382,7 @@ class StableDiffusion:
                             p, w = [StableDiffusion.get_prompt_and_weight(prompts)['prompt'],
                                     StableDiffusion.get_prompt_and_weight(prompts)['weight']]
                             prompts = self.flash_data_isi(global_prompt, p)
-                            print(f'prompt = {p}, weight = {scale*w}')
+                            print(f'prompt = {prompts}, weight = {scale*w}')
                             uc = None
                             if scale != 1.0:
                                 uc = self.model.get_learned_conditioning(n_p)
