@@ -1,3 +1,3 @@
 .\venv\Scripts\activate
 
-python app.py
+python webui.py

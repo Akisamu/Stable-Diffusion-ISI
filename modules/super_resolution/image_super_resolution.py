@@ -1,11 +1,10 @@
-import sys, os
 from numpy.lib.function_base import average
 import torch
 import torch.backends.cudnn as cudnn
 import numpy as np
 import PIL.Image as pil_image
-from model import SRCNN
-from utils import convert_rgb_to_ycbcr, convert_ycbcr_to_rgb, calc_psnr
+from modules.super_resolution.model import SRCNN
+from modules.utils import convert_rgb_to_ycbcr, convert_ycbcr_to_rgb, calc_psnr
 
 
 # 图像超分辨率

@@ -3,15 +3,9 @@ import json
 import string
 import random
 import numpy
-from model import SRCNN
-from torch.utils.data.dataloader import DataLoader
-import numpy as np
 import torch
 import numpy as np
-import os, sys
-import PIL.Image as pil_image
-import h5py
-import glob
+import os
 import cv2 as cv
 import PIL.Image as Image
 import datetime
@@ -131,7 +125,6 @@ def write_dict_to_json(path: str, d: dict) -> None:
 def dict_to_str(d: dict) -> str:
     return json.dumps(
         d,
-        # sohrt_keys=True,
         indent=4,
         separators=('', ': '),
         ensure_ascii=False

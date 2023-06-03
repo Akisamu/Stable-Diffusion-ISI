@@ -5,7 +5,7 @@ import torch
 import numpy
 import math
 import PIL
-from utils import *
+from modules.utils import *
 import cv2 as cv
 from omegaconf import OmegaConf
 from PIL import Image, ImageDraw
@@ -14,6 +14,7 @@ from itertools import islice
 from einops import repeat
 from torch import autocast
 from pytorch_lightning import seed_everything
+
 sys.path.append('stable_diffusion')
 from stable_diffusion.ldm.util import instantiate_from_config
 from stable_diffusion.ldm.models.diffusion.ddim import DDIMSampler
@@ -121,12 +122,14 @@ class StableDiffusion:
     @classmethod
     def sd_equalize_hist(cls, image: Image) -> Image:
         """没有独立 VAE 的良好方法，可以不让图像发灰"""
+        print('Start Equalize')
         img = pil_to_cv2(image)
         (b, g, r) = cv.split(img)
         equal_b = cv.equalizeHist(b)
         equal_g = cv.equalizeHist(g)
         equal_r = cv.equalizeHist(r)
         dst = cv.merge((equal_b, equal_g, equal_r))
+        print('Equalize success')
         return cv2_to_pil(dst)
 
     # 解析输入tag，确定其权重
@@ -303,6 +306,7 @@ class StableDiffusion:
                 with self.model.ema_scope():
                     for n in trange(self.n_iter, desc="Sampling"):
                         for prompts in tqdm(data, desc="data", colour="green"):
+                            print(f'This step: {prompts}')
                             uc = None
                             if scale != 1.0:
                                 uc = self.model.get_learned_conditioning(batch_size * [n_p])
@@ -415,3 +419,6 @@ class StableDiffusion:
                             # 像素空间 转换到 潜在空间
                             init_latent = self.model.get_first_stage_encoding(self.model.encode_first_stage(init_image))
                     return re_image
+
+
+
