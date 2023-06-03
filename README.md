@@ -61,6 +61,9 @@ blue eyes, elf, pantyhose,  knight, sitting, ruins, forest, wind;
 (blue eyes:2);
 (blue eyes,knight, sitting:1.21)
 ```
+原图：
+<img src="./test/origin.png">
+扩散后：
 <img src="./test/ISI.png">
 
 ## models example:
