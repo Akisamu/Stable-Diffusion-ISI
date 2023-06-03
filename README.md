@@ -51,11 +51,13 @@ https://github.com/luzhixing12345/image-super-resolution/
 ISI 语法主要分为一组全局正向提示词 (global prompt group) 和若干组局部正向提示词 (global prompt group)。
 全局提示词使用大括号 {} 进行包裹，局部提示词使用英文分号 ; 进行分隔。
 
+【注】请不要在每个局部组的最后一个提示词使用括号，否则解码器会爆炸！
+
 _示例：_
 ```markdown
 {masterpiece, best quality, ultra-detailed, illustration, white hair, 1girl}
-blue eyes, elf, pantyhose, earrings, cape, knight, sitting, ruins, forest, wind;
-blue eyes, elf, pantyhose,  knight, sitting, ruins, forest, wind;
+(blue eyes, elf), pantyhose, earrings, cape, knight, sitting, ruins, forest, wind;
+(blue eyes:1.2), elf, pantyhose,  knight, sitting, ruins, forest, wind;
 (blue eyes:2);
 (blue eyes:2);
 (blue eyes:2);
