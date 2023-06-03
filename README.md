@@ -63,7 +63,7 @@ blue eyes, elf, pantyhose,  knight, sitting, ruins, forest, wind;
 ```
 原图：
 
-<img src="./test/origin.png" width="200" height="200">
+<img src="./test/origin.png" width="300" height="300">
 
 扩散后：
 <img src="./test/ISI.png">
