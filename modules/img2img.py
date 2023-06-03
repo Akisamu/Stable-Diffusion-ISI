@@ -139,18 +139,28 @@ class StableDiffusion:
             'prompt': prompt,
             'weight': 1,
         }
+        if prompt.count('(') != prompt.count(')'):
+            re['prompt'] = re['prompt'].replace('(', '').replace(')', '').replace(':', '')
+            return re
         if prompt.startswith(' '):
             prompt = prompt[1::]
-        if (':' in prompt) and not prompt.endswith(':'):
-            ls = prompt.replace('(', '').replace(')', '').split(':')
-            re['prompt'] = ls[0]
-            re['weight'] = float(ls[1]) if is_float(ls[1]) else 1
-        elif ('(' in prompt) and (')' in prompt):
-            left, right = [prompt.count('('), prompt.count(')')]
-            re['prompt'] = prompt.replace('(', '').replace(')', '')
-            re['weight'] = math.pow(1.1, left) if left == right else 1
+        if (':' in prompt) and not prompt.endswith(':') and prompt.endswith(')') and ',' not in prompt.split(':')[1]:
+            index = prompt.rfind(":")
+            re['prompt'] = prompt[:index][1:]
+            re['weight'] = float(prompt[index+1:].replace(')', '')) \
+                if is_float(prompt[index+1:].replace(')', '')) else 1
+        elif prompt.startswith('(') and prompt.endswith(')'):
+            count = 0
+            for char in reversed(prompt):
+                if char == ")":
+                    count = count + 1
+                else:
+                    break
+            re['prompt'] = prompt[count: -count]
+            re['weight'] = math.pow(1.1, count)
         print(f'ENCODING: prompt = {re["prompt"]} and weight = {re["weight"]}')
-        re['prompt'] = re["prompt"].replace('\n', '')
+        re['prompt'] = re['prompt'].replace('\n', '')
+        re['weight'] = round(re['weight'], 5)
         if re['prompt'][0] == ',':
             re['prompt'] = re['prompt'][1::]
         return re
@@ -191,8 +201,8 @@ class StableDiffusion:
                 i = i + 1
 
     # 刷新 data 数据
-    def flash_data_isi(self, glo: str, loc: str) -> str:
-        return glo + loc
+    # def flash_data_isi(self, glo: str, loc: str) -> str:
+    #     return glo + '' + loc
 
     # def flash_data_sd(self) -> None:
     #     self.data = self.batch_size * [self.p_prompt]
@@ -385,7 +395,7 @@ class StableDiffusion:
                         for prompts in tqdm(local_prompt, desc="data", colour="blue"):
                             p, w = [StableDiffusion.get_prompt_and_weight(prompts)['prompt'],
                                     StableDiffusion.get_prompt_and_weight(prompts)['weight']]
-                            prompts = self.flash_data_isi(global_prompt, p)
+                            prompts = global_prompt + ',' + str(p)
                             print(f'prompt = {prompts}, weight = {scale*w}')
                             uc = None
                             if scale != 1.0:
@@ -419,6 +429,4 @@ class StableDiffusion:
                             # 像素空间 转换到 潜在空间
                             init_latent = self.model.get_first_stage_encoding(self.model.encode_first_stage(init_image))
                     return re_image
-
-
 

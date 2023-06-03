@@ -10,22 +10,22 @@ dependencies:
   - torchvision
   - numpy=1.19.2
   - pip:
-    - albumentations==0.4.3
+    - albumentations
     - diffusers
-    - opencv-python==4.1.2.30
-    - pudb==2019.2
+    - opencv-python
+    - pudb
     - invisible-watermark
-    - imageio==2.9.0
-    - imageio-ffmpeg==0.4.2
-    - pytorch-lightning==1.4.2
-    - omegaconf==2.1.1
-    - test-tube>=0.7.5
-    - streamlit>=0.73.1
-    - einops==0.3.0
-    - torch-fidelity==0.3.0
-    - transformers==4.19.2
-    - torchmetrics==0.6.0
-    - kornia==0.6
+    - imageio
+    - imageio-ffmpeg
+    - pytorch-lightning
+    - omegaconf
+    - test-tube
+    - streamlit
+    - einops
+    - torch-fidelity
+    - transformers
+    - torchmetrics
+    - kornia
     - opencv-python
     - opencv-contrib-python
     - -e git+https://github.com/CompVis/taming-transformers.git@master#egg=taming-transformers
