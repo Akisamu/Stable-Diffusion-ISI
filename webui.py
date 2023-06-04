@@ -36,6 +36,26 @@ sd_instance = StableDiffusion(
 )
 
 
+# 历史记录
+class HistoryImgs:
+    max = 4 * 2
+    imgs = []
+
+    @classmethod
+    def append(cls, img: Image) -> None:
+        if len(cls.imgs) >= cls.max:
+            cls.imgs = cls.imgs[1:]
+        cls.imgs.append(img)
+
+    @classmethod
+    def get_imgs(cls) -> list:
+        return cls.imgs
+
+    @classmethod
+    def get_length(cls) -> int:
+        return len(cls.imgs)
+
+
 # gradio 的 callback 函数：切换模型
 def change_model(model: str) -> str:
     global model_name
@@ -186,7 +206,8 @@ def stable_diffusion_logic(img,
     print("已将本次运行配置保存在 history 文件夹中")
     # 清除显存中缓存的张量
     torch.cuda.empty_cache()
-    return [re_image, dict_to_str(log)]
+    HistoryImgs.append(re_image)
+    return [re_image, dict_to_str(log), HistoryImgs.get_imgs()]
 
 
 # 建立 gradio 的 demo，在后续程序中 lunch()。
@@ -204,11 +225,11 @@ def create_ui():
                 with gr.Column(variant="panel"):
                     with gr.Row():
                         p_prompt = gr.Textbox(label='正向提示词',
-                                              placeholder='请输入正向提示词，每个提示词请用英文逗号分割。', lines=5,
+                                              placeholder='请输入正向提示词，每个提示词请用英文逗号分割。', lines=14,
                                               value=webui_config['default_p_prompt'], interactive=True)
                     with gr.Row():
                         n_prompt = gr.Textbox(label='反向提示词',
-                                              placeholder='请输入反向提示词，每个提示词请用英文逗号分割。', lines=5,
+                                              placeholder='请输入反向提示词，每个提示词请用英文逗号分割。', lines=10,
                                               value=webui_config['default_n_prompt'], interactive=True)
                 with gr.Column():
                     with gr.Row():
@@ -248,7 +269,7 @@ def create_ui():
                     with gr.Accordion(label='说明', open=False):
                         gr.Markdown(webui_config['intro'])
                 with gr.Row():
-                    output_img = gr.Image(type='pil', label='输出图片')
+                    output_img = gr.Image(type='pil', label='输出图片').style(height=600)
                 with gr.Row():
                     d_value = f'已加载模型：{sd_config["default_model"]}' if 'model.ckpt' in model_name_list else '无默认模型'
 
@@ -256,8 +277,13 @@ def create_ui():
                                       value=d_value if sd_config["is_init_model"] else '不加载默认模型，请切换模型',
                                       interactive=False, lines=1)
                 with gr.Row():
-                    with gr.Accordion(label='本次运行数据', open=False):
+                    with gr.Accordion(label='本次运行数据', open=True):
                         run_data = gr.Textbox(value='', interactive=False, lines=10)
+        with gr.Row():
+            with gr.Column(scale=10):
+                with gr.Accordion(label='历史记录'):
+                    his_pre = gr.Gallery(label="历史图片")\
+                        .style(columns=[4], rows=[2], object_fit="contain", height="256", preview=False)
 
             # ****************** 事件处理 ******************
             change_model_ins.click(change_model, inputs=[
@@ -278,7 +304,8 @@ def create_ui():
                 eq_cb
             ], outputs=[
                 output_img,
-                run_data
+                run_data,
+                his_pre
             ])
     return demo
 
