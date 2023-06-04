@@ -35,8 +35,6 @@ sd_instance = StableDiffusion(
     is_init_model=sd_config["is_init_model"]
 )
 
-refresh_symbol = '\U0001f504'  # 🔄
-
 
 # 历史记录
 class HistoryImgs:

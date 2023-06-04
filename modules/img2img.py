@@ -200,14 +200,6 @@ class StableDiffusion:
                     return img
                 i = i + 1
 
-    # 刷新 data 数据
-    # def flash_data_isi(self, glo: str, loc: str) -> str:
-    #     return glo + '' + loc
-
-    # def flash_data_sd(self) -> None:
-    #     self.data = self.batch_size * [self.p_prompt]
-
-    # 更换模型权重
     def sd_change_model(self, folder: str, file: str) -> None:
         self.model = load_model_from_config(self.config, StableDiffusion.get_model(folder, file))
         print(StableDiffusion.get_model(folder, file))
