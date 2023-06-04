@@ -35,6 +35,8 @@ sd_instance = StableDiffusion(
     is_init_model=sd_config["is_init_model"]
 )
 
+refresh_symbol = '\U0001f504'  # 🔄
+
 
 # 历史记录
 class HistoryImgs:
@@ -219,7 +221,7 @@ def create_ui():
             with gr.Column(scale=5):
                 with gr.Row():
                     model = gr.Dropdown(model_name_list, label='Models', info="请在此处选择您的模型",
-                                        value=model_name_list[0] if len(model_name_list) > 0 else "没有模型",
+                                        value=model_name if model_name in model_name_list else None,
                                         interactive=True)
                     change_model_ins = gr.Button('确定更改模型', interactive=True)
                 with gr.Column(variant="panel"):
@@ -284,7 +286,6 @@ def create_ui():
                 with gr.Accordion(label='历史记录'):
                     his_pre = gr.Gallery(label="历史图片")\
                         .style(columns=[4], rows=[2], object_fit="contain", height="256", preview=False)
-
             # ****************** 事件处理 ******************
             change_model_ins.click(change_model, inputs=[
                 model

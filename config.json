@@ -14,7 +14,7 @@
   },
   "stable_diffusion_config": {
     "model_folder": ".\\models\\stable diffusion",
-    "default_model": "model.ckpt",
+    "default_model": "Anything-V3.0.ckpt",
     "model_config_path": "./stable_diffusion/configs/stable-diffusion/v1-inference.yaml",
     "is_init_model": true
   },
