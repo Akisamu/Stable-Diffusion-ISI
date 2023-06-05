@@ -347,8 +347,8 @@ class StableDiffusion:
                         strength=0.5,
                         p_p="",
                         n_p="") -> list:
-        # 设置必要参数
 
+        # 设置必要参数
         global_prompt = ''
         local_prompt = []
         re_image = []
@@ -400,8 +400,9 @@ class StableDiffusion:
                             z_enc = self.sampler.stochastic_encode(init_latent,
                                                               torch.tensor([t_enc]).to(self.device))
                             # decode it 采样器采样
-                            samples = self.sampler.decode(z_enc, c, t_enc, unconditional_guidance_scale=scale*w,
-                                                     unconditional_conditioning=uc, )
+                            samples = self.sampler.decode(z_enc, c, t_enc,
+                                                          unconditional_guidance_scale=scale*w,
+                                                          unconditional_conditioning=uc, )
 
                             # VAE 解码器 将潜在空间转化为像素空间
                             x_samples = self.model.decode_first_stage(samples)

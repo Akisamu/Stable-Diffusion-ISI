@@ -235,7 +235,8 @@ def create_ui():
                     with gr.Row():
                         with gr.Column(scale=5, variant="panel"):
                             with gr.Row():
-                                bs = gr.Slider(label='批量', minimum=1, maximum=webui_config['max_batch_size'], step=1,
+                                bs = gr.Slider(label='批量', minimum=1,
+                                               maximum=webui_config['max_batch_size'], step=1,
                                                value=1, interactive=True)
                                 scale = gr.Slider(label='提示词相关性', minimum=1, maximum=webui_config['max_scale'],
                                                   step=0.1, value=7, interactive=True, elem_classes='gr_slider')
@@ -271,7 +272,8 @@ def create_ui():
                 with gr.Row():
                     output_img = gr.Image(type='pil', label='输出图片').style(height=600)
                 with gr.Row():
-                    d_value = f'已加载模型：{sd_config["default_model"]}' if 'model.ckpt' in model_name_list else '无默认模型'
+                    d_value = f'已加载模型：{sd_config["default_model"]}' \
+                        if 'model.ckpt' in model_name_list else '无默认模型'
 
                     logs = gr.Textbox(label='模型状态',
                                       value=d_value if sd_config["is_init_model"] else '不加载默认模型，请切换模型',
