@@ -1,5 +1,5 @@
 import gradio as gr
-from modules.img2img import StableDiffusion
+from modules.ISI import StableDiffusion
 from modules.super_resolution.image_super_resolution import upscale
 from modules.utils import *
 # 乐

@@ -57,13 +57,14 @@ def load_img(image: Image):
 
 
 class StableDiffusion:
-    def __init__(self, config_path: str, model_path: str, is_init_model=True):
+    def __init__(self, config_path: str, model_path: str,
+                 is_init_model=True, h=512, w=512):
         """ 以下为不可变参数 """
         self.C = 4
         # 高
-        self.H = 512
+        self.H = h
         # 宽
-        self.W = 512
+        self.W = w
         # 下采样因子
         self.f = 8
         # 采样数量
@@ -87,10 +88,13 @@ class StableDiffusion:
 
     # 输入图片大小缩放
     @classmethod
-    def input_image_resize(cls, img: Image) -> Image:
+    def input_image_resize(cls, img: Image, w=512, h=512) -> Image:
         # 获取图片大小
         width, height = img.size
         resize_image = img = pil_to_cv2(img)
+        if w / h == width / height:
+            rate = w / width
+            resize_image = cv.resize(img, (w*rate, h*rate)) if width != h else img
         if width == height:
             # 方形非512x512缩放
             resize_image = cv.resize(img, (512, 512)) if width != 512 else img
