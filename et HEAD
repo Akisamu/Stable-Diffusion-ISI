@@ -1,0 +1,41 @@
+[33m83ecdbb[m[33m ([m[1;36mHEAD -> [m[1;32mD-Switch[m[33m)[m add d-switch
+[33m22a3657[m[33m ([m[1;32mmaster[m[33m)[m add config
+[33m32a66ad[m[33m ([m[1;31morigin/master[m[33m)[m add paras on sd
+[33mb3abcf6[m the final
+[33m7497c97[m final
+[33me40a16c[m feat:final
+[33m2223f27[m feat:add gradio componments
+[33md53d326[m docs:ISI gramma
+[33m4478b76[m feat:the local group
+[33mcd5a9ee[m Update README.md
+[33m501ac56[m Update README.md
+[33m742ab06[m Update README.md
+[33m13f05f7[m Update README.md
+[33ma50597c[m docs: modify the readme
+[33ma3a0f5f[m docs: modify the readme, add the intro of ISI gramma
+[33mcaa45d7[m feat:change the file contructure
+[33m9113e96[m delete ALL the \
+[33mb3773fc[m fix:modify the Op
+[33m8f28e74[m[33m ([m[1;33mtag: 1.0.0[m[33m)[m readme
+[33m1410a8e[m readme
+[33md0c4349[m readme
+[33m61f7dd4[m Create LICENSE
+[33ma9a3db9[m .keep
+[33m3055754[m LICENSE
+[33m4176f5b[m Create LICENSE
+[33m0556cfc[m LICENSE
+[33m71d84cc[m docs:modify the readmd
+[33mfad87a2[m add os.path
+[33m1e56762[m fix:os.path.join
+[33m1044750[m fix:ISI
+[33m12a95a7[m delete .idea
+[33m54fdecf[m .idea
+[33m5c1d141[m change the info
+[33m65bd509[m feat:add the init without loading models
+[33m82dff5f[m docs:add models example
+[33mdabf428[m change the import order
+[33med99c6b[m feat:change the dict constructure and add the folder check
+[33m687fdfa[m change the class consturct
+[33m89c2ceb[m modify the readme
+[33mcb13c66[m modify the readme
+[33m32d4c43[m first commit

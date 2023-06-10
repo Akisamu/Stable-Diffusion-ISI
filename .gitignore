@@ -12,6 +12,7 @@ outputs/preview/*
 outputs/sd cache/*
 outputs/seikatus/*
 history/*
+test/*/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
