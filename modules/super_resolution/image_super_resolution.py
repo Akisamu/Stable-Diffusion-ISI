@@ -7,6 +7,15 @@ from modules.super_resolution.model import SRCNN
 from modules.utils import convert_rgb_to_ycbcr, convert_ycbcr_to_rgb, calc_psnr
 
 
+# 超分模型的路径参数
+class Para:
+    models_path = 'models/iss/best.pth'
+
+    @classmethod
+    def set_model_path(cls, p: str) -> None:
+        cls.models_path = p
+
+
 # 图像超分辨率
 def upscale(scale: int, img: pil_image) -> pil_image:
     cudnn.benchmark = True
@@ -15,7 +24,7 @@ def upscale(scale: int, img: pil_image) -> pil_image:
     model = SRCNN().to(device)
 
     state_dict = model.state_dict()
-    for n, p in torch.load('models/iss/best.pth', map_location=lambda storage, loc: storage).items():
+    for n, p in torch.load(Para.models_path, map_location=lambda storage, loc: storage).items():
         if n in state_dict.keys():
             state_dict[n].copy_(p)
         else:
